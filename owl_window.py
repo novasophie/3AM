@@ -1,6 +1,8 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QApplication, QLabel, QMenu
+from drinks import add_drink, reset_today
+
 
 class OwlWindow(QLabel):
     def __init__(self):
@@ -36,6 +38,10 @@ class OwlWindow(QLabel):
         locked_action.setCheckable(True)
         ghost_action.setChecked(self.is_ghost)
         locked_action.setChecked(self.is_locked)
+        drinks_menu = menu.addMenu("Drinks")
+        filter_coffee_action = drinks_menu.addAction("Filter Coffee")
+        drinks_menu.addSeparator()
+        reset_action = drinks_menu.addAction("Reset today")
         chosen = menu.exec(event.globalPos())
         if chosen == ghost_action:
             self.is_ghost = not self.is_ghost
@@ -45,6 +51,12 @@ class OwlWindow(QLabel):
                 self.setWindowOpacity(1.0)
         if chosen == locked_action:
             self.is_locked = not self.is_locked
+        if chosen == filter_coffee_action:
+            warning = add_drink("filter_coffee")
+            print(warning)
+        if chosen == reset_action:
+            reset_today()
+            print("Reset!")
             
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
